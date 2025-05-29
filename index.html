@@ -84,20 +84,6 @@
       border-radius: 8px;
     }
 
-    .status {
-      position: absolute;
-      color: white;
-      font-size: 16px;
-      padding: 8px 16px;
-      background: rgba(0,0,0,0.6);
-      border-radius: 6px;
-      text-align: center;
-    }
-
-    .error {
-      color: #ff6b6b;
-    }
-
     .roll-display {
       margin-top: 5px;
       font-size: 20px;
@@ -124,7 +110,6 @@
   </div>
 
   <div class="image-container">
-    <div id="imageStatus" class="status">Image Will Appear Here</div>
     <img id="aadharImage" />
   </div>
 
@@ -135,7 +120,6 @@
       const prevBtn = document.getElementById('prevBtn');
       const nextBtn = document.getElementById('nextBtn');
       const aadharImage = document.getElementById('aadharImage');
-      const imageStatus = document.getElementById('imageStatus');
 
       let baseRoll = '';
       let currentRoll = '';
@@ -188,31 +172,21 @@
 
       function loadImage() {
         const url = generateImageUrl(currentRoll);
-        imageStatus.textContent = "LOADING...";
-        imageStatus.className = "status";
         aadharImage.style.display = "none";
 
         const testImage = new Image();
         testImage.onload = function () {
           aadharImage.src = url;
-          imageStatus.textContent = "";
           aadharImage.style.display = "block";
         };
         testImage.onerror = function () {
-          showImageError("IMAGE NOT FOUND");
+          aadharImage.style.display = "none";
+          aadharImage.src = "";
         };
         testImage.src = url;
       }
 
-      function showImageError(msg) {
-        imageStatus.textContent = msg;
-        imageStatus.className = "status error";
-        aadharImage.style.display = "none";
-      }
-
       function clearImage() {
-        imageStatus.textContent = "IMAGE WILL APPEAR HERE";
-        imageStatus.className = "status";
         aadharImage.style.display = "none";
         aadharImage.src = "";
       }
@@ -248,3 +222,4 @@
   </script>
 </body>
 </html>
+
