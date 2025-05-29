@@ -156,6 +156,19 @@
         loadImage();
       });
 
+      document.addEventListener('keydown', function (event) {
+        if (!currentRoll) return;
+        if (event.key === 'ArrowLeft') {
+          currentSuffix = getPreviousSuffix(currentSuffix);
+          updateCurrentRoll();
+          loadImage();
+        } else if (event.key === 'ArrowRight') {
+          currentSuffix = getNextSuffix(currentSuffix);
+          updateCurrentRoll();
+          loadImage();
+        }
+      });
+
       function updateCurrentRoll() {
         currentRoll = basePrefix + currentSuffix;
         updateDisplay();
@@ -222,4 +235,3 @@
   </script>
 </body>
 </html>
-
