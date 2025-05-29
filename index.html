@@ -1,322 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>ROLL NAVIGATOR</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            text-transform: uppercase;
-            font-family: 'Montserrat', sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Roll Navigator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      text-transform: uppercase;
+      font-family: 'Montserrat', sans-serif;
+    }
 
-        body {
-            background: linear-gradient(135deg, #6e8efb, #a777e3);
-            color: white;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+    html, body {
+      height: 100%;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      overflow: hidden;
+    }
 
-        .header {
-            padding: 20px;
-            text-align: center;
-            background: rgba(0,0,0,0.2);
-        }
+    .header {
+      text-align: center;
+      padding: 10px;
+      background: rgba(0,0,0,0.15);
+      color: white;
+    }
 
-        .controls {
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            background: rgba(255,255,255,0.1);
-            flex-wrap: wrap;
-        }
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: rgba(255,255,255,0.1);
+      flex-wrap: wrap;
+    }
 
-        input {
-            padding: 15px 20px;
-            font-size: 18px;
-            border: none;
-            border-radius: 50px;
-            width: 300px;
-            text-align: center;
-            background: rgba(255,255,255,0.9);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            outline: none;
-            transition: all 0.3s;
-            text-transform: uppercase;
-        }
+    input {
+      padding: 10px 15px;
+      font-size: 16px;
+      border: none;
+      border-radius: 25px;
+      width: 240px;
+      text-align: center;
+      background: #fff;
+      text-transform: uppercase;
+    }
 
-        input:focus {
-            transform: scale(1.02);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-        }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
 
-        .roll-display {
-            font-size: 28px;
-            font-weight: bold;
-            margin: 10px 0;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            letter-spacing: 1px;
-        }
+    #prevBtn {
+      background: #f66;
+      color: #fff;
+    }
 
-        button {
-            padding: 12px 30px;
-            font-size: 16px;
-            font-weight: bold;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: white;
-            color: #6e8efb;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+    #nextBtn {
+      background: #4facfe;
+      color: #fff;
+    }
 
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-        }
+    .image-container {
+      position: relative;
+      height: calc(100% - 160px); /* Header + Controls height */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+    }
 
-        button:active {
-            transform: translateY(0);
-        }
+    #aadharImage {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: none;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      border-radius: 8px;
+    }
 
-        #prevBtn {
-            background: #ff9a9e;
-            color: white;
-        }
+    .status {
+      position: absolute;
+      color: white;
+      font-size: 16px;
+      padding: 8px 16px;
+      background: rgba(0,0,0,0.6);
+      border-radius: 6px;
+      text-align: center;
+    }
 
-        #nextBtn {
-            background: #4facfe;
-            color: white;
-        }
+    .error {
+      color: #ff6b6b;
+    }
 
-        .image-container {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            background: rgba(0,0,0,0.15);
-            position: relative;
-            overflow: hidden;
-        }
+    .roll-display {
+      margin-top: 5px;
+      font-size: 20px;
+      font-weight: bold;
+    }
 
-        #aadharImage {
-            width: 90%;
-            height: auto;
-            max-height: 85vh;
-            object-fit: contain;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-            display: none;
-            animation: fadeIn 0.5s ease-out;
-            image-rendering: auto;
-        }
-
-        .status {
-            position: absolute;
-            color: white;
-            font-size: 18px;
-            text-align: center;
-            padding: 20px;
-            background: rgba(0,0,0,0.5);
-            border-radius: 10px;
-        }
-
-        .error {
-            color: #ff6b6b;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        @media (max-width: 600px) {
-            input {
-                width: 100%;
-            }
-
-            .controls {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            button {
-                width: 100%;
-                max-width: 200px;
-            }
-
-            #aadharImage {
-                width: 100%;
-                max-height: 70vh;
-            }
-        }
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+    @media (max-width: 600px) {
+      input {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Roll Navigator</h1>
-        <div class="roll-display" id="currentRoll">Enter Roll Number</div>
-    </div>
+  <div class="header">
+    <h1>Roll Navigator</h1>
+    <div class="roll-display" id="currentRoll">Enter Roll Number</div>
+  </div>
 
-    <div class="controls">
-        <input type="text" id="baseRoll" placeholder="Enter Roll Number" />
-        <button id="prevBtn">Previous</button>
-        <button id="nextBtn">Next</button>
-    </div>
+  <div class="controls">
+    <input type="text" id="baseRoll" placeholder="Enter Roll Number" />
+    <button id="prevBtn">Previous</button>
+    <button id="nextBtn">Next</button>
+  </div>
 
-    <div class="image-container">
-        <div id="imageStatus" class="status">Image Will Appear Here</div>
-        <img id="aadharImage" />
-    </div>
+  <div class="image-container">
+    <div id="imageStatus" class="status">Image Will Appear Here</div>
+    <img id="aadharImage" />
+  </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const baseRollInput = document.getElementById('baseRoll');
-            const currentRollDisplay = document.getElementById('currentRoll');
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            const aadharImage = document.getElementById('aadharImage');
-            const imageStatus = document.getElementById('imageStatus');
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const baseRollInput = document.getElementById('baseRoll');
+      const currentRollDisplay = document.getElementById('currentRoll');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const aadharImage = document.getElementById('aadharImage');
+      const imageStatus = document.getElementById('imageStatus');
 
-            let baseRoll = '';
-            let currentRoll = '';
-            let currentSuffix = '00';
-            let basePrefix = '';
+      let baseRoll = '';
+      let currentRoll = '';
+      let currentSuffix = '00';
+      let basePrefix = '';
 
-            updateDisplay();
+      baseRollInput.addEventListener('change', function () {
+        this.value = this.value.toUpperCase();
+        const input = this.value.trim();
+        if (input.length >= 2) {
+          baseRoll = input;
+          currentRoll = baseRoll;
+          basePrefix = baseRoll.slice(0, -2);
+          currentSuffix = baseRoll.slice(-2);
+          updateDisplay();
+          clearImage();
+          loadImage();
+        } else {
+          alert("ROLL NUMBER MUST BE AT LEAST 2 CHARACTERS LONG");
+        }
+      });
 
-            baseRollInput.addEventListener('change', function () {
-                this.value = this.value.toUpperCase();
-                const input = this.value.trim();
-                if (input.length >= 2) {
-                    baseRoll = input;
-                    currentRoll = baseRoll;
-                    basePrefix = baseRoll.slice(0, -2);
-                    currentSuffix = baseRoll.slice(-2);
-                    updateDisplay();
-                    clearImage();
-                    loadAadharImage();
-                } else if (input.length > 0) {
-                    alert("ROLL NUMBER MUST BE AT LEAST 2 CHARACTERS LONG");
-                }
-            });
+      prevBtn.addEventListener('click', function () {
+        if (!currentRoll) return;
+        currentSuffix = getPreviousSuffix(currentSuffix);
+        updateCurrentRoll();
+        loadImage();
+      });
 
-            prevBtn.addEventListener('click', function () {
-                if (!currentRoll) return;
-                currentSuffix = getPreviousSuffix(currentSuffix);
-                updateCurrentRoll();
-                loadAadharImage();
-            });
+      nextBtn.addEventListener('click', function () {
+        if (!currentRoll) return;
+        currentSuffix = getNextSuffix(currentSuffix);
+        updateCurrentRoll();
+        loadImage();
+      });
 
-            nextBtn.addEventListener('click', function () {
-                if (!currentRoll) return;
-                currentSuffix = getNextSuffix(currentSuffix);
-                updateCurrentRoll();
-                loadAadharImage();
-            });
+      function updateCurrentRoll() {
+        currentRoll = basePrefix + currentSuffix;
+        updateDisplay();
+      }
 
-            function updateCurrentRoll() {
-                currentRoll = basePrefix + currentSuffix;
-                updateDisplay();
-            }
+      function updateDisplay() {
+        currentRollDisplay.textContent = currentRoll || 'ENTER ROLL NUMBER';
+        baseRollInput.value = currentRoll;
+      }
 
-            function updateDisplay() {
-                currentRollDisplay.textContent = currentRoll || 'ENTER ROLL NUMBER';
-                baseRollInput.value = currentRoll;
-            }
+      function generateImageUrl(roll) {
+        return `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${roll}/DOCS/${roll}_Aadhar.jpg`;
+      }
 
-            function generateAadharUrl(roll) {
-                return `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${roll}/DOCS/${roll}_Aadhar.jpg`;
-            }
+      function loadImage() {
+        const url = generateImageUrl(currentRoll);
+        imageStatus.textContent = "LOADING...";
+        imageStatus.className = "status";
+        aadharImage.style.display = "none";
 
-            function loadAadharImage() {
-                const url = generateAadharUrl(currentRoll);
-                imageStatus.textContent = "LOADING...";
-                imageStatus.className = "status";
-                aadharImage.style.display = "none";
+        const testImage = new Image();
+        testImage.onload = function () {
+          aadharImage.src = url;
+          imageStatus.textContent = "";
+          aadharImage.style.display = "block";
+        };
+        testImage.onerror = function () {
+          showImageError("IMAGE NOT FOUND");
+        };
+        testImage.src = url;
+      }
 
-                const testImage = new Image();
-                testImage.onload = function () {
-                    aadharImage.src = url;
-                    aadharImage.onload = function () {
-                        imageStatus.textContent = "";
-                        imageStatus.className = "";
-                        aadharImage.style.display = "block";
-                    };
-                    aadharImage.onerror = function () {
-                        showImageError("ERROR LOADING IMAGE");
-                    };
-                };
-                testImage.onerror = function () {
-                    showImageError("IMAGE NOT FOUND");
-                };
-                testImage.src = url;
-            }
+      function showImageError(msg) {
+        imageStatus.textContent = msg;
+        imageStatus.className = "status error";
+        aadharImage.style.display = "none";
+      }
 
-            function showImageError(message) {
-                imageStatus.textContent = message;
-                imageStatus.className = "status error";
-                aadharImage.style.display = "none";
-            }
+      function clearImage() {
+        imageStatus.textContent = "IMAGE WILL APPEAR HERE";
+        imageStatus.className = "status";
+        aadharImage.style.display = "none";
+        aadharImage.src = "";
+      }
 
-            function clearImage() {
-                imageStatus.textContent = "IMAGE WILL APPEAR HERE";
-                imageStatus.className = "status";
-                aadharImage.style.display = "none";
-                aadharImage.src = "";
-            }
+      function getNextSuffix(suffix) {
+        const [a, b] = suffix.split('');
+        if (/[0-9]/.test(a) && /[0-9]/.test(b)) {
+          const val = parseInt(suffix, 10);
+          return (val + 1).toString().padStart(2, '0');
+        } else if (/[A-Z]/.test(a)) {
+          const num = parseInt(b, 10);
+          if (num < 9) return a + (num + 1);
+          const nextChar = String.fromCharCode(a.charCodeAt(0) + 1);
+          return nextChar + '0';
+        }
+        return suffix;
+      }
 
-            function getNextSuffix(suffix) {
-                const [firstChar, secondChar] = suffix.split('');
-
-                if (/[0-8]/.test(firstChar) && /[0-9]/.test(secondChar)) {
-                    const num = parseInt(suffix, 10);
-                    return (num + 1).toString().padStart(2, '0');
-                } else if (firstChar === '9') {
-                    if (secondChar === '9') return 'A0';
-                    return '9' + (parseInt(secondChar) + 1);
-                } else if (/[A-Y]/.test(firstChar)) {
-                    const letter = firstChar;
-                    const num = parseInt(secondChar);
-                    if (num < 9) return letter + (num + 1);
-                    const nextLetter = String.fromCharCode(letter.charCodeAt(0) + 1);
-                    return nextLetter + '0';
-                } else if (firstChar === 'Z') {
-                    if (secondChar === '9') return 'Z9';
-                    return 'Z' + (parseInt(secondChar) + 1);
-                }
-                return suffix;
-            }
-
-            function getPreviousSuffix(suffix) {
-                const [firstChar, secondChar] = suffix.split('');
-
-                if (/[0-9]/.test(firstChar) && /[0-9]/.test(secondChar)) {
-                    const num = parseInt(suffix, 10);
-                    if (num > 1) return (num - 1).toString().padStart(2, '0');
-                    if (num === 1) return '00';
-                } else if (firstChar === 'A') {
-                    if (secondChar === '0') return '09';
-                    return 'A' + (parseInt(secondChar) - 1);
-                } else if (/[B-Z]/.test(firstChar)) {
-                    const letter = firstChar;
-                    const num = parseInt(secondChar);
-                    if (num > 0) return letter + (num - 1);
-                    const prevLetter = String.fromCharCode(letter.charCodeAt(0) - 1);
-                    return prevLetter + '9';
-                }
-                return suffix;
-            }
-        });
-    </script>
+      function getPreviousSuffix(suffix) {
+        const [a, b] = suffix.split('');
+        if (/[0-9]/.test(a) && /[0-9]/.test(b)) {
+          const val = parseInt(suffix, 10);
+          return val > 0 ? (val - 1).toString().padStart(2, '0') : '00';
+        } else if (/[A-Z]/.test(a)) {
+          const num = parseInt(b, 10);
+          if (num > 0) return a + (num - 1);
+          const prevChar = String.fromCharCode(a.charCodeAt(0) - 1);
+          return prevChar + '9';
+        }
+        return suffix;
+      }
+    });
+  </script>
 </body>
 </html>
